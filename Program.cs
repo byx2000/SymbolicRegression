@@ -200,13 +200,13 @@ namespace SymbolicRegression
                 {
                     if (errs[i] < errs[i + 1])
                     {
-                        pop[i].Mutate(functionSet);
+                        pop[i].Mutate();
                         pop[i].Optimize(points, optimizeGenCount);
                         newPop.Add(pop[i]);
                     }
                     else
                     {
-                        pop[i + 1].Mutate(functionSet);
+                        pop[i + 1].Mutate();
                         pop[i + 1].Optimize(points, optimizeGenCount);
                         newPop.Add(pop[i + 1]);
                     }

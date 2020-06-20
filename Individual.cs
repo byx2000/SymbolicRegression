@@ -8,6 +8,7 @@ namespace SymbolicRegression
     {
         private readonly List<Function> gene = new List<Function>();
         private readonly List<double> coeff = new List<double>();
+        private  FunctionSet functionSet;
 
         public string GeneString
         {
@@ -60,14 +61,17 @@ namespace SymbolicRegression
 
         }
 
-        public Individual(List<Function> gene, List<double> coeff)
+        public Individual(List<Function> gene, List<double> coeff, FunctionSet functionSet)
         {
             this.gene = gene;
             this.coeff = coeff;
+            this.functionSet = functionSet;
         }
 
         public Individual(int headLen, FunctionSet functionSet, double minVal, double maxVal)
         {
+            this.functionSet = functionSet;
+
             // 计算尾部长度
             int tailLen = headLen * (functionSet.MaxParamCount - 1) + 1;
 
@@ -174,7 +178,7 @@ namespace SymbolicRegression
             return GetValue(ref iGene, ref iCoeff, x);
         }
 
-        public void Mutate(FunctionSet functionSet)
+        public void Mutate()
         {
             double p = 0.1;
             int headLen = (gene.Count - 1) / functionSet.MaxParamCount;
@@ -217,6 +221,7 @@ namespace SymbolicRegression
             {
                 ind.coeff.Add(coeff[i]);
             }
+            ind.functionSet = functionSet;
             return ind;
         }
 

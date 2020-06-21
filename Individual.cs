@@ -4,11 +4,21 @@ using System.Text;
 
 namespace SymbolicRegression
 {
-    class Individual : ICloneable
+    interface IIndividual<T> : ICloneable
+    {
+        double Eval(double x);
+        double Error(List<Point> points);
+        void Mutate();
+        void Cross(T ind);
+        void Optimize(List<Point> points);
+    }
+
+    class Individual : IIndividual<Individual>
     {
         private readonly List<Function> gene = new List<Function>();
         private readonly List<double> coeff = new List<double>();
-        private  FunctionSet functionSet;
+        private FunctionSet functionSet;
+        private int optimizeGenerationCount;
 
         public string GeneString
         {
@@ -61,16 +71,18 @@ namespace SymbolicRegression
 
         }
 
-        public Individual(List<Function> gene, List<double> coeff, FunctionSet functionSet)
+        public Individual(List<Function> gene, List<double> coeff, FunctionSet functionSet, int optimizeGenerationCount)
         {
             this.gene = gene;
             this.coeff = coeff;
             this.functionSet = functionSet;
+            this.optimizeGenerationCount = optimizeGenerationCount;
         }
 
-        public Individual(int headLen, FunctionSet functionSet, double minVal, double maxVal)
+        public Individual(int headLen, FunctionSet functionSet, double minVal, double maxVal, int optimizeGenerationCount)
         {
             this.functionSet = functionSet;
+            this.optimizeGenerationCount = optimizeGenerationCount;
 
             // 计算尾部长度
             int tailLen = headLen * (functionSet.MaxParamCount - 1) + 1;
@@ -222,6 +234,7 @@ namespace SymbolicRegression
                 ind.coeff.Add(coeff[i]);
             }
             ind.functionSet = functionSet;
+            ind.optimizeGenerationCount = optimizeGenerationCount;
             return ind;
         }
 
@@ -250,22 +263,22 @@ namespace SymbolicRegression
         }
 
         // 比较两组系数谁更优
-        private bool Better(List<double> c1, List<double> c2, List<Point> points)
-        {
-            for (int i = 0; i < c1.Count; ++i)
-            {
-                coeff[i] = c1[i];
-            }
-            double e1 = Error(points);
-            for (int i = 0; i < c2.Count; ++i)
-            {
-                coeff[i] = c2[i];
-            }
-            double e2 = Error(points);
-            return e1 < e2;
-        }
+        //private bool Better(List<double> c1, List<double> c2, List<Point> points)
+        //{
+        //    for (int i = 0; i < c1.Count; ++i)
+        //    {
+        //        coeff[i] = c1[i];
+        //    }
+        //    double e1 = Error(points);
+        //    for (int i = 0; i < c2.Count; ++i)
+        //    {
+        //        coeff[i] = c2[i];
+        //    }
+        //    double e2 = Error(points);
+        //    return e1 < e2;
+        //}
 
-        public void Optimize(List<Point> points, int maxGeneration)
+        public void Optimize(List<Point> points)
         {
             //int popSize = 10;
             //double sigma = 1;
@@ -326,7 +339,7 @@ namespace SymbolicRegression
             int coeffCount = CoeffCount;
 
             double minErr = Error(points);
-            for (int iGen = 0; iGen < maxGeneration; ++iGen)
+            for (int iGen = 0; iGen < optimizeGenerationCount; ++iGen)
             {
                 // 备份
                 List<double> backup = new List<double>();

@@ -111,7 +111,8 @@ namespace SymbolicRegression
                 .AddNonterminator(new Mul())
                 .AddNonterminator(new Div())
                 .AddNonterminator(new Sin())
-                .AddNonterminator(new Exp());
+                .AddNonterminator(new Exp())
+                ;
 
             //Individual ind = new Individual(new List<Function> 
             //{
@@ -144,8 +145,8 @@ namespace SymbolicRegression
             List<Individual> pop = new List<Individual>();
             for (int i = 0; i < popSize; ++i)
             {
-                Individual ind = new Individual(10, functionSet, -5, 5);
-                ind.Optimize(points, optimizeGenCount);
+                Individual ind = new Individual(10, functionSet, -5, 5, optimizeGenCount);
+                ind.Optimize(points);
                 pop.Add(ind);
             }
 
@@ -201,13 +202,13 @@ namespace SymbolicRegression
                     if (errs[i] < errs[i + 1])
                     {
                         pop[i].Mutate();
-                        pop[i].Optimize(points, optimizeGenCount);
+                        pop[i].Optimize(points);
                         newPop.Add(pop[i]);
                     }
                     else
                     {
                         pop[i + 1].Mutate();
-                        pop[i + 1].Optimize(points, optimizeGenCount);
+                        pop[i + 1].Optimize(points);
                         newPop.Add(pop[i + 1]);
                     }
                 }
@@ -220,8 +221,8 @@ namespace SymbolicRegression
                     Individual p1 = (Individual)newPop[r1].Clone();
                     Individual p2 = (Individual)newPop[r2].Clone();
                     p1.Cross(p2);
-                    p1.Optimize(points, optimizeGenCount);
-                    p2.Optimize(points, optimizeGenCount);
+                    p1.Optimize(points);
+                    p2.Optimize(points);
                     newPop.Add(p1);
                     newPop.Add(p2);
                 }

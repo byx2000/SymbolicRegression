@@ -4,17 +4,85 @@ using System.Text;
 
 namespace SymbolicRegression
 {
+    /// <summary>
+    /// 函数类型：常数、变量、其它函数
+    /// </summary>
     enum FunctionType
     {
         Constant, Variable, Function
     }
 
+    /// <summary>
+    /// 函数基类
+    /// </summary>
     abstract class Function
     {
         public abstract int ParamCount { get; }
         public abstract string Symbol { get; }
         public virtual FunctionType Type { get; } = FunctionType.Function;
         public abstract double Eval(params double[] p);
+    }
+
+    /// <summary>
+    /// 函数集
+    /// </summary>
+    class FunctionSet
+    {
+        private readonly List<Function> terminator = new List<Function>();
+        private readonly List<Function> nonterminator = new List<Function>();
+
+        public int MaxParamCount
+        {
+            get
+            {
+                int r = 0;
+                for (int i = 0; i < nonterminator.Count; ++i)
+                {
+                    r = Math.Max(r, nonterminator[i].ParamCount);
+                }
+                return r;
+            }
+        }
+
+        public FunctionSet AddTerminator(Function f)
+        {
+            if (f.ParamCount == 0)
+            {
+                terminator.Add(f);
+            }
+            return this;
+        }
+
+        public FunctionSet AddNonterminator(Function f)
+        {
+            if (f.ParamCount > 0)
+            {
+                nonterminator.Add(f);
+            }
+            return this;
+        }
+
+        public Function RandomTerminator()
+        {
+            return RandomUtil.RandomElement(terminator);
+        }
+
+        public Function RandomNonterminator()
+        {
+            return RandomUtil.RandomElement(nonterminator);
+        }
+
+        public Function RandomFunction()
+        {
+            if (RandomUtil.Test(0.5))
+            {
+                return RandomTerminator();
+            }
+            else
+            {
+                return RandomNonterminator();
+            }
+        }
     }
 
     class Const : Function
@@ -106,65 +174,6 @@ namespace SymbolicRegression
         public override double Eval(params double[] p)
         {
             return Math.Exp(p[0]);
-        }
-    }
-
-    class FunctionSet
-    {
-        private readonly List<Function> terminator = new List<Function>();
-        private readonly List<Function> nonterminator = new List<Function>();
-
-        public int MaxParamCount
-        {
-            get
-            {
-                int r = 0;
-                for (int i = 0; i < nonterminator.Count; ++i)
-                {
-                    r = Math.Max(r, nonterminator[i].ParamCount);
-                }
-                return r;
-            }
-        }
-
-        public FunctionSet AddTerminator(Function f)
-        {
-            if (f.ParamCount == 0)
-            {
-                terminator.Add(f);
-            }
-            return this;
-        }
-
-        public FunctionSet AddNonterminator(Function f)
-        {
-            if (f.ParamCount > 0)
-            {
-                nonterminator.Add(f);
-            }
-            return this;
-        }
-
-        public Function RandomTerminator()
-        {
-            return RandomUtil.RandomElement(terminator);
-        }
-
-        public Function RandomNonterminator()
-        {
-            return RandomUtil.RandomElement(nonterminator);
-        }
-
-        public Function RandomFunction()
-        {
-            if (RandomUtil.Test(0.5))
-            {
-                return RandomTerminator();
-            }
-            else
-            {
-                return RandomNonterminator();
-            }
         }
     }
 }

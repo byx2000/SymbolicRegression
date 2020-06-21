@@ -4,6 +4,9 @@ using System.Text;
 
 namespace SymbolicRegression
 {
+    /// <summary>
+    /// 二维坐标数据点
+    /// </summary>
     class Point
     {
         public double X { get; set; }

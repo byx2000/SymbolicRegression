@@ -114,29 +114,6 @@ namespace SymbolicRegression
                 .AddNonterminator(new Exp())
                 ;
 
-            //Individual ind = new Individual(new List<Function> 
-            //{
-            //    new Add(),
-            //    new Add(),
-            //    new Mul(),
-            //    new Mul(),
-            //    new Const(),
-            //    new Var(),
-            //    new Var(),
-            //    new Mul(),
-            //    new Const(),
-            //    new Var(),
-            //    new Const(),
-            //}, new List<double> 
-            //{
-            //    RandomUtil.U(-5.0, 5.0),
-            //    RandomUtil.U(-5.0, 5.0),
-            //    RandomUtil.U(-5.0, 5.0),
-            //});
-            //Console.WriteLine(ind.ExprString);
-            //ind.Optimize(points);
-            //Console.WriteLine(ind.ExprString);
-
             int popSize = 200; // 种群大小
             int genDuration = 100; // 连续100代无更优个体则结束进化
             int optimizeGenCount = 500; // 对每个个体的优化代数
@@ -234,6 +211,30 @@ namespace SymbolicRegression
 
                 iGen++;
             }
+
+            // 测试代码
+            //Individual ind = new Individual(new List<Function> 
+            //{
+            //    new Add(),
+            //    new Add(),
+            //    new Mul(),
+            //    new Mul(),
+            //    new Const(),
+            //    new Var(),
+            //    new Var(),
+            //    new Mul(),
+            //    new Const(),
+            //    new Var(),
+            //    new Const(),
+            //}, new List<double> 
+            //{
+            //    RandomUtil.U(-5.0, 5.0),
+            //    RandomUtil.U(-5.0, 5.0),
+            //    RandomUtil.U(-5.0, 5.0),
+            //});
+            //Console.WriteLine(ind.ExprString);
+            //ind.Optimize(points);
+            //Console.WriteLine(ind.ExprString);
         }
     }
 }

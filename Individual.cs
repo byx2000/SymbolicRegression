@@ -4,6 +4,10 @@ using System.Text;
 
 namespace SymbolicRegression
 {
+    /// <summary>
+    /// 个体接口
+    /// </summary>
+    /// <typeparam name="T">个体派生类</typeparam>
     interface IIndividual<T> : ICloneable
     {
         double Eval(double x);
@@ -13,6 +17,9 @@ namespace SymbolicRegression
         void Optimize(List<Point> points);
     }
 
+    /// <summary>
+    /// GEP个体实现
+    /// </summary>
     class Individual : IIndividual<Individual>
     {
         private readonly List<Function> gene = new List<Function>();

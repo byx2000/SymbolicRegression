@@ -4,6 +4,9 @@ using System.Text;
 
 namespace SymbolicRegression
 {
+    /// <summary>
+    /// 随机数工具类
+    /// </summary>
     static class RandomUtil
     {
         private static readonly Random rand = new Random();

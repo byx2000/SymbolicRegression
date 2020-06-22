@@ -44,18 +44,13 @@ namespace SymbolicRegression
             }
         }
 
-        public FunctionSet AddTerminator(Function f)
+        public FunctionSet AddFunction(Function f)
         {
             if (f.ParamCount == 0)
             {
                 terminator.Add(f);
             }
-            return this;
-        }
-
-        public FunctionSet AddNonterminator(Function f)
-        {
-            if (f.ParamCount > 0)
+            else if (f.ParamCount > 0)
             {
                 nonterminator.Add(f);
             }

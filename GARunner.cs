@@ -4,11 +4,21 @@ using System.Text;
 
 namespace SymbolicRegression
 {
+    /// <summary>
+    /// 遗传算法进化器
+    /// </summary>
     interface IGARunner
     {
         void Evolve();
     }
 
+    /// <summary>
+    /// 默认进化算法
+    /// 初始种群：随机生成
+    /// 选择方式：锦标赛选择
+    /// 子代构成：50％交叉、50％变异
+    /// 结束条件：最优个体经过指定代数的进化后没有变化
+    /// </summary>
     class GARunner : IGARunner
     {
         public List<Point> Points { get; set; }

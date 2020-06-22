@@ -104,50 +104,25 @@ namespace SymbolicRegression
             // 函数集
             FunctionSet functionSet = new FunctionSet();
             functionSet
-                .AddTerminator(new Var())
-                .AddTerminator(new Const())
-                .AddNonterminator(new Add())
-                .AddNonterminator(new Sub())
-                .AddNonterminator(new Mul())
-                .AddNonterminator(new Div())
-                .AddNonterminator(new Sin())
-                .AddNonterminator(new Exp())
+                .AddFunction(new Var())
+                .AddFunction(new Const())
+                .AddFunction(new Add())
+                .AddFunction(new Sub())
+                .AddFunction(new Mul())
+                .AddFunction(new Div())
+                .AddFunction(new Sin())
+                .AddFunction(new Exp())
                 ;
 
-            GARunner runner = new GARunner
+            // 开始进化
+            new GARunner
             {
                 Points = points,
                 FunctionSet = functionSet,
                 PopSize = 200,
                 GenDuration = 100,
                 OptimizeGenCount = 500,
-            };
-
-            runner.Evolve();
-
-            // 测试代码
-            //Individual ind = new Individual(new List<Function> 
-            //{
-            //    new Add(),
-            //    new Add(),
-            //    new Mul(),
-            //    new Mul(),
-            //    new Const(),
-            //    new Var(),
-            //    new Var(),
-            //    new Mul(),
-            //    new Const(),
-            //    new Var(),
-            //    new Const(),
-            //}, new List<double> 
-            //{
-            //    RandomUtil.U(-5.0, 5.0),
-            //    RandomUtil.U(-5.0, 5.0),
-            //    RandomUtil.U(-5.0, 5.0),
-            //});
-            //Console.WriteLine(ind.ExprString);
-            //ind.Optimize(points);
-            //Console.WriteLine(ind.ExprString);
+            }.Evolve();
         }
     }
 }

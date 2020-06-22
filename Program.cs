@@ -114,103 +114,16 @@ namespace SymbolicRegression
                 .AddNonterminator(new Exp())
                 ;
 
-            int popSize = 200; // 种群大小
-            int genDuration = 100; // 连续100代无更优个体则结束进化
-            int optimizeGenCount = 500; // 对每个个体的优化代数
-
-            // 初始化种群
-            List<Individual> pop = new List<Individual>();
-            for (int i = 0; i < popSize; ++i)
+            GARunner runner = new GARunner
             {
-                Individual ind = new Individual(10, functionSet, -5, 5, optimizeGenCount);
-                ind.Optimize(points);
-                pop.Add(ind);
-            }
+                Points = points,
+                FunctionSet = functionSet,
+                PopSize = 200,
+                GenDuration = 100,
+                OptimizeGenCount = 500,
+            };
 
-            // 开始进化
-            int cnt = 0;
-            int iGen = 0;
-            while (true)
-            {
-                if (cnt > genDuration)
-                {
-                    break;
-                }
-
-                // 计算所有个体的误差 查找最优子代
-                List<double> errs = new List<double>();
-                Individual best = pop[0];
-                errs.Add(best.Error(points));
-                double minErr = errs[0];
-                bool findBest = false;
-                for (int i = 1; i < popSize; ++i)
-                {
-                    errs.Add(pop[i].Error(points));
-                    if (errs[i] < minErr)
-                    {
-                        best = pop[i];
-                        minErr = errs[i];
-                        findBest = true;
-                    }
-                }
-
-                if (findBest)
-                {
-                    cnt = 0;
-                }
-                else
-                {
-                    cnt++;
-                }
-
-                // 输出最优个体
-                Console.WriteLine(iGen);
-                Console.WriteLine(best.ExprString);
-                Console.WriteLine("error: " + minErr);
-                Console.WriteLine();
-
-                // 备份最好个体
-                Individual bestBackup = (Individual)best.Clone();
-
-                // 锦标赛选择 变异
-                List<Individual> newPop = new List<Individual>();
-                for (int i = 0; i < popSize; i += 2)
-                {
-                    if (errs[i] < errs[i + 1])
-                    {
-                        pop[i].Mutate();
-                        pop[i].Optimize(points);
-                        newPop.Add(pop[i]);
-                    }
-                    else
-                    {
-                        pop[i + 1].Mutate();
-                        pop[i + 1].Optimize(points);
-                        newPop.Add(pop[i + 1]);
-                    }
-                }
-
-                // 交叉
-                for (int i = 0; i < popSize / 4; ++i)
-                {
-                    int r1 = RandomUtil.U(0, popSize / 2);
-                    int r2 = RandomUtil.U(0, popSize / 2);
-                    Individual p1 = (Individual)newPop[r1].Clone();
-                    Individual p2 = (Individual)newPop[r2].Clone();
-                    p1.Cross(p2);
-                    p1.Optimize(points);
-                    p2.Optimize(points);
-                    newPop.Add(p1);
-                    newPop.Add(p2);
-                }
-
-                // 保留精英
-                newPop[0] = bestBackup;
-
-                pop = newPop;
-
-                iGen++;
-            }
+            runner.Evolve();
 
             // 测试代码
             //Individual ind = new Individual(new List<Function> 

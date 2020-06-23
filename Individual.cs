@@ -7,20 +7,19 @@ namespace SymbolicRegression
     /// <summary>
     /// 个体接口
     /// </summary>
-    /// <typeparam name="T">个体派生类</typeparam>
-    interface IIndividual<T> : ICloneable
+    interface IIndividual : ICloneable
     {
         double Eval(double x);
         double Error(List<Point> points);
         void Mutate();
-        void Cross(T ind);
+        void Cross(IIndividual ind);
         void Optimize(List<Point> points);
     }
 
     /// <summary>
     /// GEP个体实现
     /// </summary>
-    class GEPIndividual : IIndividual<GEPIndividual>
+    class GEPIndividual : IIndividual
     {
         private readonly List<Function> gene = new List<Function>();
         private readonly List<double> coeff = new List<double>();
@@ -194,7 +193,12 @@ namespace SymbolicRegression
         {
             int iGene = 0;
             int iCoeff = 0;
-            return GetValue(ref iGene, ref iCoeff, x);
+            double val = GetValue(ref iGene, ref iCoeff, x);
+            if (double.IsNaN(val))
+            {
+                return double.PositiveInfinity;
+            }
+            return val;
         }
 
         public void Mutate()
@@ -217,15 +221,19 @@ namespace SymbolicRegression
             }
         }
 
-        public void Cross(GEPIndividual ind)
+        public void Cross(IIndividual ind)
         {
-            int r1 = RandomUtil.U(0, gene.Count);
-            int r2 = RandomUtil.U(r1, gene.Count);
-            for (int i = r1; i <= r2; ++i)
+            if (ind is GEPIndividual)
             {
-                Function t = gene[i];
-                gene[i] = ind.gene[i];
-                ind.gene[i] = t;
+                GEPIndividual gep = (GEPIndividual)ind;
+                int r1 = RandomUtil.U(0, gene.Count);
+                int r2 = RandomUtil.U(r1, gene.Count);
+                for (int i = r1; i <= r2; ++i)
+                {
+                    Function t = gene[i];
+                    gene[i] = gep.gene[i];
+                    gep.gene[i] = t;
+                }
             }
         }
 
@@ -269,79 +277,8 @@ namespace SymbolicRegression
             }
         }
 
-        // 比较两组系数谁更优
-        //private bool Better(List<double> c1, List<double> c2, List<Point> points)
-        //{
-        //    for (int i = 0; i < c1.Count; ++i)
-        //    {
-        //        coeff[i] = c1[i];
-        //    }
-        //    double e1 = Error(points);
-        //    for (int i = 0; i < c2.Count; ++i)
-        //    {
-        //        coeff[i] = c2[i];
-        //    }
-        //    double e2 = Error(points);
-        //    return e1 < e2;
-        //}
-
         public void Optimize(List<Point> points)
         {
-            //int popSize = 10;
-            //double sigma = 1;
-            //int geneLen = CoeffCount;
-
-            //// 初始化种群
-            //List<List<double>> pop = new List<List<double>>();
-            //for (int i = 0; i < popSize; ++i)
-            //{
-            //    List<double> ind = new List<double>();
-            //    for (int j = 0; j < geneLen; ++j)
-            //    {
-            //        ind.Add(RandomUtil.N(coeff[j], sigma));
-            //    }
-            //    pop.Add(ind);
-            //}
-
-            //// 最好个体
-            //List<double> best = new List<double>();
-            //for (int i = 0; i < geneLen; ++i)
-            //{
-            //    best.Add(coeff[i]);
-            //}
-
-            //for (int iGen = 0; iGen < maxGeneration; ++iGen)
-            //{
-            //    // 查找最优个体
-            //    for (int i = 0; i < popSize; ++i)
-            //    {
-            //        if (Better(pop[i], best, points))
-            //        {
-            //            best = pop[i];
-            //        }
-            //    }
-
-            //    // 生成子代
-            //    for (int i = 0; i < popSize; ++i)
-            //    {
-            //        List<double> child = new List<double>();
-            //        for (int j = 0; j < geneLen; ++j)
-            //        {
-            //            child.Add(RandomUtil.N(pop[i][j], sigma));
-            //        }
-            //        if (Better(child, pop[i], points))
-            //        {
-            //            pop[i] = child;
-            //        }
-            //    }
-            //}
-
-            //// 更新系数
-            //for (int i = 0; i < geneLen; ++i)
-            //{
-            //    coeff[i] = best[i];
-            //}
-
             double sigma = 1;
             int coeffCount = CoeffCount;
 

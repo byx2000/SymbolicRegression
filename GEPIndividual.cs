@@ -20,7 +20,7 @@ namespace SymbolicRegression
     /// <summary>
     /// GEP个体实现
     /// </summary>
-    class Individual : IIndividual<Individual>
+    class GEPIndividual : IIndividual<GEPIndividual>
     {
         private readonly List<Function> gene = new List<Function>();
         private readonly List<double> coeff = new List<double>();
@@ -73,12 +73,12 @@ namespace SymbolicRegression
             }
         }
 
-        public Individual()
+        public GEPIndividual()
         {
 
         }
 
-        public Individual(List<Function> gene, List<double> coeff, FunctionSet functionSet, int optimizeGenerationCount)
+        public GEPIndividual(List<Function> gene, List<double> coeff, FunctionSet functionSet, int optimizeGenerationCount)
         {
             this.gene = gene;
             this.coeff = coeff;
@@ -86,7 +86,7 @@ namespace SymbolicRegression
             this.optimizeGenerationCount = optimizeGenerationCount;
         }
 
-        public Individual(int headLen, FunctionSet functionSet, double minVal, double maxVal, int optimizeGenerationCount)
+        public GEPIndividual(int headLen, FunctionSet functionSet, double minVal, double maxVal, int optimizeGenerationCount)
         {
             this.functionSet = functionSet;
             this.optimizeGenerationCount = optimizeGenerationCount;
@@ -217,7 +217,7 @@ namespace SymbolicRegression
             }
         }
 
-        public void Cross(Individual ind)
+        public void Cross(GEPIndividual ind)
         {
             int r1 = RandomUtil.U(0, gene.Count);
             int r2 = RandomUtil.U(r1, gene.Count);
@@ -231,7 +231,7 @@ namespace SymbolicRegression
 
         public object Clone()
         {
-            Individual ind = new Individual();
+            GEPIndividual ind = new GEPIndividual();
             for (int i = 0; i < gene.Count; ++i)
             {
                 ind.gene.Add(gene[i]);

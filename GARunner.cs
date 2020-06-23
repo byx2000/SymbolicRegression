@@ -30,10 +30,10 @@ namespace SymbolicRegression
         public void Evolve()
         {
             // 初始化种群
-            List<Individual> pop = new List<Individual>();
+            List<GEPIndividual> pop = new List<GEPIndividual>();
             for (int i = 0; i < PopSize; ++i)
             {
-                Individual ind = new Individual(10, FunctionSet, -5, 5, OptimizeGenCount);
+                GEPIndividual ind = new GEPIndividual(10, FunctionSet, -5, 5, OptimizeGenCount);
                 ind.Optimize(Points);
                 pop.Add(ind);
             }
@@ -50,7 +50,7 @@ namespace SymbolicRegression
 
                 // 计算所有个体的误差 查找最优子代
                 List<double> errs = new List<double>();
-                Individual best = pop[0];
+                GEPIndividual best = pop[0];
                 errs.Add(best.Error(Points));
                 double minErr = errs[0];
                 bool findBest = false;
@@ -81,10 +81,10 @@ namespace SymbolicRegression
                 Console.WriteLine();
 
                 // 备份最好个体
-                Individual bestBackup = (Individual)best.Clone();
+                GEPIndividual bestBackup = (GEPIndividual)best.Clone();
 
                 // 锦标赛选择 变异
-                List<Individual> newPop = new List<Individual>();
+                List<GEPIndividual> newPop = new List<GEPIndividual>();
                 for (int i = 0; i < PopSize; i += 2)
                 {
                     if (errs[i] < errs[i + 1])
@@ -106,8 +106,8 @@ namespace SymbolicRegression
                 {
                     int r1 = RandomUtil.U(0, PopSize / 2);
                     int r2 = RandomUtil.U(0, PopSize / 2);
-                    Individual p1 = (Individual)newPop[r1].Clone();
-                    Individual p2 = (Individual)newPop[r2].Clone();
+                    GEPIndividual p1 = (GEPIndividual)newPop[r1].Clone();
+                    GEPIndividual p2 = (GEPIndividual)newPop[r2].Clone();
                     p1.Cross(p2);
                     p1.Optimize(Points);
                     p2.Optimize(Points);

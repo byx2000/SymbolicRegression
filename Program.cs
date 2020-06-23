@@ -114,15 +114,24 @@ namespace SymbolicRegression
                 .AddFunction(new Exp())
                 ;
 
-            // 开始进化
-            new GARunner
-            {
-                Points = points,
+            // 生成初始种群
+            List<IIndividual> initPop = new GEPPopulationGenerator
+            { 
+                PopSize = 200, 
+                HeadLen = 10,
+                OptimizeGenerationCount = 500,
+                Data = points,
                 FunctionSet = functionSet,
-                PopSize = 200,
-                GenDuration = 100,
-                OptimizeGenCount = 500,
-            }.Evolve();
+                ConstMinVal = -5,
+                ConstMaxVal = 5,
+            }.Generate();
+
+            // 进化
+            new Evolver1
+            {
+                Data = points,
+                MaxCount = 100,
+            }.Evolve(initPop);
         }
     }
 }

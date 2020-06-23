@@ -9,6 +9,7 @@ namespace SymbolicRegression
     /// </summary>
     interface IIndividual : ICloneable
     {
+        string ExprString { get; }
         double Eval(double x);
         double Error(List<Point> points);
         void Mutate();
